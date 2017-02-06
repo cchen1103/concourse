@@ -29,4 +29,4 @@ cp keys/web/tsa_host_key.pub keys/worker
 systemctl enable docker
 systemctl start docker
 
-docker-compose up
+docker-compose up > /dev/null &
