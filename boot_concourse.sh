@@ -8,9 +8,11 @@ web_url=127.0.0.1
 
 # verify docker is installed
 if [ -n "$(command -v yum)" ]; then
-    yum -y install docker
+    yum -y update
+    yum -y install docker-engine
 elif [ -n "$(command -v apt-get)" ]; then
-    apt-get -y install docker
+    apt-get -y update
+    apt-get -y install docker.io
 fi
 
 [ -d ~/concourse ] || mkdir ~/concourse
