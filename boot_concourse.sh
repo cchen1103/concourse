@@ -1,11 +1,17 @@
 #!/bin/bash
 
+set -x
+
 # define concourse web url ip
 web_url=127.0.0.1
 [[ $1 ]] && web_url=$1
 
 # verify docker is installed
-yum -y install docker
+if [ -n "$(command -v yum)" ]; then
+    yum -y install docker
+elif [ -n "$(command -v apt-get)" ]; then
+    apt-get -y install docker
+fi
 
 [ -d ~/concourse ] || mkdir ~/concourse
 export PATH=$PATH:~/concourse
@@ -26,7 +32,11 @@ ssh-keygen -t rsa -f ./keys/worker/worker_key -N ''
 cp keys/worker/worker_key.pub keys/web/authorized_worker_keys
 cp keys/web/tsa_host_key.pub keys/worker
 
-systemctl enable docker
-systemctl start docker
+if [ -n "$(command -v systemctl)" ]; then
+    systemctl enable docker
+    systemctl start docker
+elif [ -n "$(command -v service)" ]; then
+    service docker start
+fi
 
 docker-compose up > /dev/null &
