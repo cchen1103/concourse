@@ -16,6 +16,7 @@ elif [ -n "$(command -v apt-get)" ]; then
 fi
 
 [ -d ~/concourse ] || mkdir ~/concourse
+export COMPOSE_API_VERSION=1.18
 export PATH=$PATH:~/concourse
 export CONCOURSE_EXTERNAL_URL=http://${web_url}:8080
 
