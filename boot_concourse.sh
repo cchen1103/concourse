@@ -11,17 +11,20 @@ if [ -n "$(command -v yum)" ]; then
     yum -y update
     yum -y install docker-engine
 elif [ -n "$(command -v apt-get)" ]; then
-    apt-get -y update
-    apt-get -y install docker.io
+    curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
+    add-apt-repository "deb https://apt.dockerproject.org/repo/ ubuntu-$(lsb_release -cs) main"
+    apt-get update
+    apt-get -y install docker-engine
 fi
 
 [ -d ~/concourse ] || mkdir ~/concourse
-export COMPOSE_API_VERSION=1.18
-export PATH=$PATH:~/concourse
-export CONCOURSE_EXTERNAL_URL=http://${web_url}:8080
 
 curl -L "https://github.com/docker/compose/releases/download/1.10.1/docker-compose-$(uname -s)-$(uname -m)" \
    -o ~/concourse/docker-compose && chmod +x ~/concourse/docker-compose
+
+export COMPOSE_API_VERSION=1.18
+export PATH=$PATH:~/concourse
+export CONCOURSE_EXTERNAL_URL=http://${web_url}:8080
 
 # setup keys for concourse
 cd ~/concourse
