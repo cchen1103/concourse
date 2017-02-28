@@ -37,7 +37,7 @@ CONCOURSE_IP=`hostname -I | cut -d' ' -f1`
 
 for pipe in \$(ls -1 *.pipe); do
     pipe_name=\$(echo \${pipe} |cut -f1 -d'.')
-    ./fly -t ${project} set-pipeline -p \${pipe_name} -c \${pipe}
+    ./fly -t ${project} set-pipeline -p \${pipe_name} -c \${pipe} --load-vars-from env.yml
 
     # start all pipelines
     ./fly -t ${project} unpause-pipeline --pipeline \${pipe_name}
