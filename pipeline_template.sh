@@ -26,8 +26,7 @@ cat > $(eval echo ${base_dir})/setup_pipe.sh <<SETUP_PIPE
 #!/bin/bash
 
 # export env variables
-[ -z \${GIT_USER} ] || (echo "GIT_USER and GIT_TOKEN not set" && exit -1)
-[ -z \${GIT_TOKEN} ] || (echo GIT_TOKEN not set" && exit -1)
+[ -e env.yml ] || (echo "env.yml not found" && exit -1)
 
 CONCOURSE_IP=`hostname -I | cut -d' ' -f1`
 [[ \${CONCOURSE_IP} ]] || CONCOURSE_IP=127.0.0.1
@@ -38,7 +37,7 @@ CONCOURSE_IP=`hostname -I | cut -d' ' -f1`
 
 for pipe in \$(ls -1 *.pipe); do
     pipe_name=\$(echo \${pipe} |cut -f1 -d'.')
-    ./fly -t ${project} set-pipeline -p \${pipe_name} -c \${pipe} --var git_user=\${GIT_USER} --var git_token=\${GIT_TOKEN}
+    ./fly -t ${project} set-pipeline -p \${pipe_name} -c \${pipe}
 
     # start all pipelines
     ./fly -t ${project} unpause-pipeline --pipeline \${pipe_name}
@@ -46,6 +45,17 @@ done
 SETUP_PIPE
 
 chmod +x $(eval echo ${base_dir})/setup_pipe.sh
+
+echo "create env.yml template..."
+cat > $(eval echo ${base_dir})/env.yml <<ENV
+---
+# git resources credentials
+
+git_user: dummy_user
+git_token: dummy_token
+
+# additional environment variables
+ENV
 
 echo "create pipeline directory structure..."
 [ -d $(eval echo ${base_dir})/tasks ] || mkdir $(eval echo ${base_dir})/tasks
