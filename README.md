@@ -1,5 +1,6 @@
 # concourse
-Bootstrap concourse for CI/CD!
+
+<b>concourse in docker containers</b>
 
 Simply run from your concourse host as:
 
