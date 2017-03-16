@@ -57,7 +57,7 @@ generate_keys() {
 
 	# remove all old key pairs
 	[[ $(ls -A ./keys/web) ]] && rm -rf ./keys/web/*
-	[[ $(ls -A ./keys/worker) ]] && rm -rf ./web/worker/*
+	[[ $(ls -A ./keys/worker) ]] && rm -rf ./keys/worker/*
 
 	# generate new keys
 	ssh-keygen -t rsa -f ./keys/web/tsa_host_key -N ''
