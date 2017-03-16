@@ -61,3 +61,8 @@ echo "start concourse ..."
 # launch concourse in docker
 nohup docker-compose up > /dev/null &
 
+echo
+echo "installation completed successfully"
+echo "login to concourse at:"
+echo "http://$(hostname -I | cut -f1 -d' '):8080"
+
