@@ -1,17 +1,83 @@
 #!/bin/bash
 
-# stop the script whenever we have a failure
-set -eo pipefail
-
 # if TRACE is set, print out each command that executes
 [[ $TRACE ]] && set -x
 
+# usage intructions
+usage() {
+
+	cat <<- EOF
+
+	usage: $PROGNAME options
+
+	    This script install CI/CD concourse tool in docker containers.
+
+	OPTIONS:
+	    -p --path 			specify installation path, default at ~/concourse
+	    -x --debug			debug
+	    -h --help			show this help
+
+	EXAMPLES:
+	    Install to default directory, i.e. ~/concourse
+	    $PROGNAME -- install to ~/concourse directory
+
+	    Install specified path, i.e. /usr/local/bin
+	    $PROGNAME --path /usr/local/bin
+
+	    Show each shell command that executes
+	    $PROGNAME --debug
+
+	    Show help message
+	    $PROGNAME --help
+	EOF
+
+}
+
+# parse arguments
+opt_parser() {
+
+	local arg=
+	for arg; do
+		local delim=""
+		case "${arg}" in
+			--path)	args="${args}-p ";;
+			--debug) args="${args}-x ";;
+			--help) args="${args}-h ";;
+			*) [[ "${arg:0:1}" == "-" ]] || delim="\""
+				args="${args}${delim}${arg}${delim} ";;
+		esac
+	done
+
+    #Reset the positional parameters to the short options
+    eval set -- $args
+
+    while getopts "hxp:" OPTION
+    do
+         case $OPTION in
+         h)
+             usage
+             exit 0
+             ;;
+         x)
+             readonly DEBUG='-x'
+             set -x
+             ;;
+         p)
+             readonly INSTALLATION_PATH=$OPTARG
+             ;;
+        esac
+    done
+
+}
+
 # this script requires to be run in previlige mode
 check_privilege() {
+
 	if [[ "$EUID" -ne 0 ]]; then
 	  printf "\nPlease run in previliged mode\n" 1>&2
 	  exit -1
 	fi
+
 }
 
 # install docker engine. Although both CentOS and Debian OS installation are provide,
@@ -25,6 +91,7 @@ install_docker() {
 	add-apt-repository "deb https://apt.dockerproject.org/repo/ ubuntu-${ubuntu_rel} main"
 	apt-get update
 	apt-get -y install docker-engine
+
 }
 
 # install docker compose which is used to create concourse containers
@@ -74,11 +141,14 @@ generate_keys() {
 
 main() {
 
+	set -eo pipefail
+
+	opt_parser $ARGS
+
 	printf "\n%s\n" "install concourse in docker container ..."
 
-	# define concourse web url ip
 	local compose_version=1.11.2
-	local installation_path=${1:-~/concourse}
+	local installation_path=${INSTALLATION_PATH:-~/concourse}
 
 	printf "\n%s\n" "check running mode ..."
 
@@ -108,14 +178,20 @@ main() {
 	printf "%4s%-16s%s\n" '' "installed at:" "${installation_path}"
 	printf "%4s%-16s%s\n" '' "concourse url:" "http://$(hostname -I | cut -f1 -d' '):8080"
 
+	# set the back compatability to the compose api
+	# export all environment variables and path needed to run concourse
+
+	export COMPOSE_API_VERSION=1.18
+	export PATH=$PATH:${installation_path}
+	export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
+
 }
 
-main 
+# set immutable input argument
 
-# set the back compatability to the compose api
-# export all environment variables and path needed to run concourse
+readonly ARGS="$@"
+readonly PROGNAME=$(basename $0)
 
-export COMPOSE_API_VERSION=1.18
-export PATH=$PATH:${installation_path}
-export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
+main
+
 
