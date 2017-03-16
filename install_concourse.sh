@@ -98,7 +98,7 @@ main() {
 
 	printf "\n%s\n" "start docker engine ..."
 
-	service docker start
+	[[ $(service docker status | grep running) ]] || service docker start
 
 	printf "\n%s\n" "start concourse ..."
 
