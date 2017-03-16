@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # stop the script whenever we have a failure
-set -ueo pipefail
+set -eo pipefail
 
 # if TRACE is set, print out each command that executes
 [[ $TRACE ]] && set -x
@@ -9,7 +9,7 @@ set -ueo pipefail
 # this script requires to be run in previlige mode
 check_privilege() {
 	if [[ "$EUID" -ne 0 ]]; then
-	  printf "Please run in previliged mode" 1>&2
+	  printf "\nPlease run in previliged mode\n" 1>&2
 	  exit -1
 	fi
 }
