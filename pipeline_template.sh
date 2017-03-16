@@ -20,7 +20,8 @@ read -p 'Base working directory: ' base_dir
 
 [ -d $(eval echo ${base_dir}) ] || (echo "create ${base_dir} directory..." && mkdir -p $(eval echo ${base_dir}))
 
-echo "create pipeline setup script..."
+echo
+echo "create pipeline setup script ..."
 
 cat > $(eval echo ${base_dir})/setup_pipe.sh <<SETUP_PIPE
 #!/bin/bash
@@ -46,7 +47,9 @@ SETUP_PIPE
 
 chmod +x $(eval echo ${base_dir})/setup_pipe.sh
 
-echo "create env.yml template..."
+echo
+echo "create env.yml template ..."
+
 cat > $(eval echo ${base_dir})/env.yml <<ENV
 ---
 # git resources credentials
@@ -57,6 +60,12 @@ git_token: dummy_token
 # additional environment variables
 ENV
 
-echo "create pipeline directory structure..."
+echo
+echo "create pipeline directory structure ..."
+
 [ -d $(eval echo ${base_dir})/tasks ] || mkdir $(eval echo ${base_dir})/tasks
 [ -d $(eval echo ${base_dir})/scripts ] || mkdir $(eval echo ${base_dir})/scripts
+
+echo
+echo "template created successfully"
+
