@@ -69,7 +69,7 @@ opt_parser() {
 check_privilege() {
 
 	if [[ "$EUID" -ne 0 ]]; then
-		printf "\nPlease run in previliged mode\n" 1>&2
+		printf "\nERROR: Please run in previliged mode\n" 1>&2
 		exit -1
 	fi
 
@@ -83,7 +83,7 @@ check_kernel_version() {
 	
 	if [[ $(echo "${kernel_ver}<${min_ver}" | bc) ]]; then
 		printf "\nConcourse in docker requires kernel version 3.19 or higher."
-		printf "detect current kernel version: %s" $(uname -r)
+		printf "ERROR: detect current kernel version: %s" $(uname -r)
 		exit -1
 	fi
 
