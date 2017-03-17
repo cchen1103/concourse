@@ -60,6 +60,11 @@ opt_parser() {
 		p)
 			readonly INSTALLATION_PATH=$OPTARG
 			;;
+		*)
+			printf "\nERROR: unknown argument.\n"
+			usage
+			exit -1;
+			;;
 		esac
 	done
 
@@ -79,11 +84,11 @@ check_privilege() {
 check_kernel_version() {
 
 	local min_ver='3.19'
-	kernel_ver=$( uname -r |cut -f-2 -d'.')
+	local kernel_ver=$( uname -r | cut -f-2 -d'.')
 	
-	if [[ $(echo "${kernel_ver}<${min_ver}" | bc) ]]; then
+	if [[ $(echo "${kernel_ver} < ${min_ver}" | bc) -ne 0 ]]; then
 		printf "\nConcourse in docker requires kernel version 3.19 or higher."
-		printf "ERROR: detect current kernel version: %s" $(uname -r)
+		printf "\nERROR: detect current kernel version: %s\n" $(uname -r)
 		exit -1
 	fi
 
@@ -117,6 +122,9 @@ install_compose() {
 	curl -L "https://github.com/docker/compose/releases/download/${compose_ver}/docker-compose-${os}-${platform}" \
    		-o ${installation_path}/docker-compose
 	chmod +x ${installation_path}/docker-compose
+
+	# copy docker-compose.yml to the isntalaltion directory
+	cp ${PROGPATH}/docker-compose.yml ${installation_path}/.
 
 }
 
@@ -185,8 +193,6 @@ main() {
 
 	printf "\n%s\n" "start concourse ..."
 
-	nohup docker-compose up > /dev/null &
-
 	printf "\n%s\n" "installation completed successfully ..."
 	printf "%4s%-16s%s\n" '' "installed at:" "${installation_path}"
 	printf "%4s%-16s%s\n" '' "concourse url:" "http://$(hostname -I | cut -f1 -d' '):8080"
@@ -198,12 +204,17 @@ main() {
 	export PATH=$PATH:${installation_path}
 	export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
 
+	pushd ${installation_path}
+        nohup docker-compose up > /dev/null &
+	popd
+
 }
 
 # set immutable input argument
 
 readonly ARGS="$@"
 readonly PROGNAME=$(basename $0)
+readonly PROGPATH=$(pwd $(dirname "${BASH_SOURCE[0]}"))
 
 main
 
