@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# if TRACE is set, print out each command that executes
-[[ $TRACE ]] && set -x
-
 # usage intructions
 usage() {
 
@@ -48,25 +45,23 @@ opt_parser() {
 		esac
 	done
 
-    #Reset the positional parameters to the short options
-    eval set -- $args
+	#Reset the positional parameters to the short options
+	eval set -- $args
 
-    while getopts "hxp:" OPTION
-    do
-         case $OPTION in
-         h)
-             usage
-             exit 0
-             ;;
-         x)
-             readonly DEBUG='-x'
-             set -x
-             ;;
-         p)
-             readonly INSTALLATION_PATH=$OPTARG
-             ;;
-        esac
-    done
+	while getopts "hxp:" OPTION; do
+		case $OPTION in
+		h)
+			usage
+			exit 0
+			;;
+		x)
+			set -x
+			;;
+		p)
+			readonly INSTALLATION_PATH=$OPTARG
+			;;
+		esac
+	done
 
 }
 
@@ -74,8 +69,22 @@ opt_parser() {
 check_privilege() {
 
 	if [[ "$EUID" -ne 0 ]]; then
-	  printf "\nPlease run in previliged mode\n" 1>&2
-	  exit -1
+		printf "\nPlease run in previliged mode\n" 1>&2
+		exit -1
+	fi
+
+}
+
+# check kernel version should be greater than 3.19
+check_kernel_version() {
+
+	local min_ver='3.19'
+	kernel_ver=$( uname -r |cut -f-2 -d'.')
+	
+	if [[ $(echo "${kernel_ver}<${min_ver}" | bc) ]]; then
+		printf "\nConcourse in docker requires kernel version 3.19 or higher."
+		printf "detect current kernel version: %s" $(uname -r)
+		exit -1
 	fi
 
 }
@@ -153,6 +162,10 @@ main() {
 	printf "\n%s\n" "check running mode ..."
 
 	check_privilege
+
+	printf "\n%s\n" "check required kernel version ..."
+
+	check_kernel_version
 
 	printf "\n%s\n" "install docker engine ..."
 
