@@ -124,7 +124,7 @@ install_compose() {
 	chmod +x ${installation_path}/docker-compose
 
 	# copy docker-compose.yml to the isntalaltion directory
-	cp ${PROGPATH}/docker-compose.yml ${installation_path}/.
+	[[ -f ${installation_path}/docker-compose.yml ]] || cp ${PROGPATH}/docker-compose.yml ${installation_path}/.
 
 }
 
