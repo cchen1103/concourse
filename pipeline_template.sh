@@ -39,7 +39,7 @@ template_pipeline_setup() {
 
 	local base_path="$1"; shift
 
-	cat > ${base_path}/setup_pipe_linux.sh <<SETUP_PIPE
+	cat > ${base_path}/setup_pipe.sh <<SETUP_PIPE
 	#!/bin/bash
 
 	# export env variables
