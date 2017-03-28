@@ -32,7 +32,7 @@ set_path() {
 		mkdir -p ${base_path}
 	fi
 
-	BASE_PATH=$(pwd ${base_path})
+	BASE_PATH=${base_path}
 }
 
 template_pipeline_setup() {
