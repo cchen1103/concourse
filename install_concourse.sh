@@ -86,6 +86,7 @@ check_kernel_version() {
 	local min_ver='3.19'
 	local kernel_ver=$( uname -r | cut -f-2 -d'.')
 	
+	apt-get -y install bc
 	if [[ $(echo "${kernel_ver} < ${min_ver}" | bc) -ne 0 ]]; then
 		printf "\nConcourse in docker requires kernel version 3.19 or higher."
 		printf "\nERROR: detect current kernel version: %s\n" $(uname -r)
