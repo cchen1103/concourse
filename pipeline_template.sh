@@ -45,7 +45,7 @@ template_pipeline_setup() {
 	# export env variables
 	[[ -e env.yml ]] || (printf "env.yml not found\n" && exit -1)
 
-	export CONCOURSE_IP=\$(hostname -I | cut -d' ' -f1)
+	[[ $CONCOURSE_IP ]] || export CONCOURSE_IP=\$(hostname -I | cut -d' ' -f1)
 
 	./fly --target ${PROJECT} login -c http://\${CONCOURSE_IP}:8080
 
