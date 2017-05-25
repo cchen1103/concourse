@@ -5,30 +5,30 @@ services:
   concourse-db:
     image: postgres:9.5
     networks:
-      - concourse
+    - concourse
     environment:
-      - POSTGRES_DB=concourse
-      - POSTGRES_USER=concourse
-      - POSTGRES_PASSWORD=F$.<}t9yf.?
-      - PGDATA=/database
+    - POSTGRES_DB=concourse
+    - POSTGRES_USER=concourse
+    - POSTGRES_PASSWORD="Fp.<}t9yf.?"
+    - PGDATA=/database
     deploy:
       replicas: 1
 
   concourse-web:
-    images: concourse/concourse
+    image: concourse/concourse
     privileged: true
     command: web
     networks:
-      - concourse
+    - concourse
     ports:
-      - 8080:8080
+    - 8080:8080
     volumes:
       - ./keys/web:/concourse-keys
     environment:
-      CONCOURSE_BASIC_AUTH_USERNAME=concourse
-      CONCOURSE_BASIC_AUTH_PASSWORD=changeme
-      CONCOURSE_EXTERNAL_URL="${CONCOURSE_EXTERNAL_URL}"
-      CONCOURSE_POSTGRES_DATA_SOURCE="postgres://concourse:changeme@concourse-db:5432/concourse?sslmode=disable"
+    - CONCOURSE_BASIC_AUTH_USERNAME=concourse
+    - CONCOURSE_BASIC_AUTH_PASSWORD=changeme
+    - CONCOURSE_EXTERNAL_URL="${CONCOURSE_EXTERNAL_URL}"
+    - CONCOURSE_POSTGRES_DATA_SOURCE="postgres://concourse:changeme@concourse-db:5432/concourse?sslmode=disable"
     deploy:
       replicas: 1
 
@@ -36,10 +36,12 @@ services:
     image: concourse/concourse
     privileged: true
     command: worker
+    networks:
+    - concourse
     volumes:
-      - ./keys/worker:/concourse-keys
+    - ./keys/worker:/concourse-keys
     environment:
-      CONCOURSE_TSA_HOST=concourse-web
+    - CONCOURSE_TSA_HOST=concourse-web
 
 networks:
   concourse:

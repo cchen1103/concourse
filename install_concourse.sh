@@ -85,7 +85,7 @@ check_kernel_version() {
 
 	local min_ver='3.19'
 	local kernel_ver=$( uname -r | cut -f-2 -d'.')
-	
+
 	apt-get -y install bc
 	if [[ $(echo "${kernel_ver} < ${min_ver}" | bc) -ne 0 ]]; then
 		printf "\nConcourse in docker requires kernel version 3.19 or higher."
@@ -99,7 +99,7 @@ check_kernel_version() {
 # concourse in docker requires kernel version > 3.19.
 
 install_docker() {
-	
+
 	local ubuntu_rel=$(lsb_release -cs)
 
 	curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
@@ -180,9 +180,9 @@ main() {
 
 	install_docker
 
-	printf "\n%s\n" "install compose ..."
+	#printf "\n%s\n" "install compose ..."
 
-	install_compose ${compose_version} ${installation_path}
+	#install_compose ${compose_version} ${installation_path}
 
 	printf "\n%s\n" "generate self-signed key for concourse ..."
 
@@ -201,12 +201,13 @@ main() {
 	# set the back compatability to the compose api
 	# export all environment variables and path needed to run concourse
 
-	export COMPOSE_API_VERSION=1.18
+	#export COMPOSE_API_VERSION=1.18
 	export PATH=$PATH:${installation_path}
 	export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
 
 	pushd ${installation_path}
-        nohup docker-compose up > /dev/null &
+        #nohup docker-compose up > /dev/null &
+				docker stack deploy -c concourse_stack.yml cc
 	popd
 
 }
@@ -218,5 +219,3 @@ readonly PROGNAME=$(basename $0)
 readonly PROGPATH=$(pwd $(dirname "${BASH_SOURCE[0]}"))
 
 main
-
-
