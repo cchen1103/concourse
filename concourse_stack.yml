@@ -8,7 +8,7 @@ services:
     environment:
     - POSTGRES_DB=concourse
     - POSTGRES_USER=concourse
-    - POSTGRES_PASSWORD="Fp.<}t9yf.?"
+    - POSTGRES_PASSWORD=Fp.<}t9yf.?
     - PGDATA=/database
     deploy:
       mode: replicated
@@ -26,9 +26,9 @@ services:
       - ./keys/web:/concourse-keys
     environment:
     - CONCOURSE_BASIC_AUTH_USERNAME=concourse
-    - CONCOURSE_BASIC_AUTH_PASSWORD="Fp.<}t9yf.?"
+    - CONCOURSE_BASIC_AUTH_PASSWORD=Fp.<}t9yf.?
 #    - CONCOURSE_EXTERNAL_URL="${CONCOURSE_EXTERNAL_URL}"
-    - CONCOURSE_POSTGRES_DATA_SOURCE=postgres://concourse:changeme@concourse-db:5432/concourse?sslmode=disable
+    - CONCOURSE_POSTGRES_DATA_SOURCE=postgres://concourse:Fp.<}t9yf.?@concourse-db:5432/concourse?sslmode=disable
     deploy:
       mode: replicated
       replicas: 1
