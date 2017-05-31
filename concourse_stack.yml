@@ -16,7 +16,6 @@ services:
 
   concourse-web:
     image: concourse/concourse
-    privileged: true
     command: web
     networks:
     - concourse
@@ -30,11 +29,11 @@ services:
     - CONCOURSE_POSTGRES_DATA_SOURCE=postgres://concourse:M3sseyP233@concourse-db:5432/concourse?sslmode=disable
     deploy:
       mode: replicated
+      privileged: true
       replicas: 1
 
   concourse-worker:
     image: concourse/concourse
-    privileged: true
     command: worker
     networks:
     - concourse
@@ -44,6 +43,7 @@ services:
     - CONCOURSE_TSA_HOST=concourse-web
     deploy:
       mode: replicated
+      privileged: true
       replicas: 2
 
 networks:
