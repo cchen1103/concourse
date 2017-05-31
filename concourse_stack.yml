@@ -16,7 +16,6 @@ services:
 
   concourse-web:
     image: concourse/concourse
-    privileged: true
     command: web
     networks:
     - concourse
@@ -29,12 +28,12 @@ services:
     - CONCOURSE_BASIC_AUTH_PASSWORD=S0mthingSp3c1a1
     - CONCOURSE_POSTGRES_DATA_SOURCE=postgres://concourse:M3sseyP233@concourse-db:5432/concourse?sslmode=disable
     deploy:
+      privileged: true
       mode: replicated
       replicas: 1
 
   concourse-worker:
     image: concourse/concourse
-    privileged: true
     command: worker
     networks:
     - concourse
@@ -43,6 +42,7 @@ services:
     environment:
     - CONCOURSE_TSA_HOST=concourse-web
     deploy:
+      privileged: true
       mode: replicated
       replicas: 2
 
