@@ -30,7 +30,6 @@ services:
     deploy:
       privileged: true
       mode: replicated
-      privileged: true
       replicas: 1
 
   concourse-worker:
@@ -45,7 +44,6 @@ services:
     deploy:
       privileged: true
       mode: replicated
-      privileged: true
       replicas: 2
 
 networks:
