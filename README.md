@@ -19,7 +19,7 @@ Concourse in Docker requires Linux kernel should be greater than 3.19 and curren
 
 <h3> Run Concourse</h3>
 Open browser and goto:
-    http://\<host ip\>:8080
+    http://{concourse server ip}:8080
     
 <h3>Setup Pipeline</h3>
 The repo comes with a pipeline setup template. Run the template setup script will create a working directory and tools that can help you setup a pipeline. You can either use symbolic libk to link you pipeline directories into this working directory, or you can build or copy your pipeline directories into this working directory.
