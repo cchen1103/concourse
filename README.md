@@ -3,7 +3,7 @@
 <h3>Description</h3>
 This tool will setup 3 basic concourse CI/CD containers in the localhost to perform basic concourse pipeline. After successfully setup concourse containers, user can use the concourse to deploy applications. Authentication for GUI is set at dockercompose.yml. The GUI for the concourse is:
 
-http://\<host ip\>:8080
+http://{concourse server ip}:8080
 
 <h3>Prerequisites</h3>
 Concourse in Docker requires Linux kernel should be greater than 3.19 and currently only support on Ubuntu instance.
