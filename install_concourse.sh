@@ -109,6 +109,26 @@ install_docker() {
 
 }
 
+# install docker compose which is used to create concourse containers
+
+install_compose() {
+
+        local compose_ver="$1"; shift
+        local installation_path="$1"; shift
+        local os=$(uname -s)
+        local platform=$(uname -m)
+
+        [[ -d ${installation_path} ]] || mkdir ${installation_path}
+
+        curl -L "https://github.com/docker/compose/releases/download/${compose_ver}/docker-compose-${os}-${platform}" \
+                -o ${installation_path}/docker-compose
+        chmod +x ${installation_path}/docker-compose
+
+        # copy docker-compose.yml to the isntalaltion directory
+        [[ -f ${installation_path}/docker-compose.yml ]] || cp ${PROGPATH}/docker-compose.yml ${installation_path}/.
+
+}
+
 # generate self signed key pairs for concourse worker, concourse db and concourse web
 
 generate_keys() {
@@ -160,7 +180,9 @@ main() {
 
 	install_docker
 
-	#printf "\n%s\n" "install compose ..."
+        #printf "\n%s\n" "install compose ..."
+
+        install_compose ${compose_version} ${installation_path}
 
 	printf "\n%s\n" "generate self-signed key for concourse ..."
 
@@ -182,8 +204,8 @@ main() {
 	export PATH=$PATH:${installation_path}
 
 	pushd ${installation_path}
-        #nohup docker-compose up > /dev/null &
-				docker stack deploy -c concourse_stack.yml cc
+        nohup docker-compose up > /dev/null &
+	# docker stack deploy -c concourse_stack.yml cc
 	popd
 
 }
