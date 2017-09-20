@@ -3,7 +3,7 @@
 <h3>Description</h3>
 This tool will setup 3 basic concourse CI/CD containers in the localhost to perform basic concourse pipeline. After successfully setup concourse containers, user can use the concourse to deploy applications. Authentication for GUI is set at dockercompose.yml. The GUI for the concourse is:
 
-http://\<host ip\>:8080
+http://{concourse server ip}:8080
 
 <h3>Prerequisites</h3>
 Concourse in Docker requires Linux kernel should be greater than 3.19 and currently only support on Ubuntu instance.
@@ -19,7 +19,7 @@ Concourse in Docker requires Linux kernel should be greater than 3.19 and curren
 
 <h3> Run Concourse</h3>
 Open browser and goto:
-    http://\<host ip\>:8080
+    http://{concourse server ip}:8080
     
 <h3>Setup Pipeline</h3>
 The repo comes with a pipeline setup template. Run the template setup script will create a working directory and tools that can help you setup a pipeline. You can either use symbolic libk to link you pipeline directories into this working directory, or you can build or copy your pipeline directories into this working directory.
