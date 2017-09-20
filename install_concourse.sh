@@ -180,7 +180,9 @@ main() {
 
 	install_docker
 
-	#printf "\n%s\n" "install compose ..."
+        #printf "\n%s\n" "install compose ..."
+
+        install_compose ${compose_version} ${installation_path}
 
 	#install_compose ${compose_version} ${installation_path}
 
@@ -206,8 +208,8 @@ main() {
 	export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
 
 	pushd ${installation_path}
-        #nohup docker-compose up > /dev/null &
-				docker stack deploy -c concourse_stack.yml cc
+        nohup docker-compose up > /dev/null &
+	# docker stack deploy -c concourse_stack.yml cc
 	popd
 
 }
